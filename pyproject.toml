@@ -38,11 +38,11 @@ dev = [
 ]
 
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling", "hatchling-vcs"]
 build-backend = "hatchling.build"
 
 [tool.hatch.version]
-path = "linalgzero/__init__.py"
+source = "vcs"
 
 [tool.setuptools]
 py-modules = ["linalgzero"]
