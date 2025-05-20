@@ -16,25 +16,23 @@ plugins:
       handlers:
         python:
           paths: ["linalgzero"]
+extra_css:
+  - stylesheets/extra.css
 theme:
   name: material
   feature:
     tabs: true
   palette:
     - media: "(prefers-color-scheme: light)"
-      scheme: default
-      primary: white
-      accent: deep orange
+      scheme: astral-light
       toggle:
         icon: material/brightness-7
         name: Switch to dark mode
     - media: "(prefers-color-scheme: dark)"
-      scheme: slate
-      primary: black
-      accent: deep orange
+      scheme: astral-dark
       toggle:
         icon: material/brightness-4
-        name: Switch to light mode
+        name: Switch to system preference
   icon:
     repo: fontawesome/brands/github
 
