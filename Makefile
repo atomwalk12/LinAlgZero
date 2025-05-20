@@ -46,6 +46,10 @@ docs-test: ## Test if documentation can be built without warnings or errors
 docs: ## Build and serve the documentation
 	@uv run mkdocs serve
 
+.PHONY: semantic-release
+semantic-release: ## Test semantic release
+	@semantic-release -vv --noop version --print
+
 .PHONY: help
 help:
 	@uv run python -c "import re; \
