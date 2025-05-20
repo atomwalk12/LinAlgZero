@@ -50,6 +50,10 @@ docs: ## Build and serve the documentation
 semantic-release: ## Test semantic release
 	@semantic-release -vv --noop version --print
 
+.PHONY: gh-deploy
+gh-deploy: ## Deploy the documentation to GitHub Pages
+	@uv run mkdocs gh-deploy --force
+
 .PHONY: help
 help:
 	@uv run python -c "import re; \
