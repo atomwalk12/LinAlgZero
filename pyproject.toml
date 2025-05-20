@@ -123,7 +123,7 @@ source = ["linalgzero"]
 [tool.semantic_release]
 assets = []
 build_command_env = []
-commit_message = "chore(release): 📦 v{version}\n"
+commit_message = "chore(release): 📦 v{version} [skip ci]"
 commit_parser = "conventional"
 logging_use_named_masks = false
 major_on_zero = true
@@ -138,7 +138,7 @@ prerelease_token = "rc"
 prerelease = false
 
 [tool.semantic_release.changelog]
-exclude_commit_patterns = []
+exclude_commit_patterns = ["^chore.*"]
 mode = "init"
 insertion_flag = "<!-- version list -->"
 template_dir = "templates"
