@@ -1,1 +1,2 @@
-::: linalgzero.foo
+::: linalgzero.trainers.trainer
+::: linalgzero.experiments.config

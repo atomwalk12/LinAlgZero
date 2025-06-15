@@ -20,6 +20,11 @@ test: ## Test the code with pytest
 	@echo "🚀 Testing code: Running pytest"
 	@uv run python -m pytest --cov --cov-config=pyproject.toml --cov-report=xml
 
+.PHONY: coverage-site
+coverage-site: ## Generate coverage report in HTML format
+	@echo "🚀 Generating coverage report in HTML format"
+	@uv run coverage html
+
 .PHONY: build
 build: clean-build ## Build wheel file
 	@echo "🚀 Creating wheel file"
