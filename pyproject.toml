@@ -121,6 +121,8 @@ skip_empty = true
 branch = true
 source = ["linalgzero"]
 omit = [
+    # This file is a thin wrapper around the launch script, it is intended to be very simple.
+    # It is excluded from the coverage report.
     "*/run_training.py"
 ]
 

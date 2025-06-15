@@ -10,5 +10,5 @@ def test_default_config():
 
     # This follows the "test the behaviour, not the implementation" principle.
     # It will fail if the config has missing entries or the data class is defined incorrectly.
-    args: ZeroConfig = parser.parse_yaml_file(config_path)
+    (args,) = parser.parse_yaml_file(config_path)
     assert args is not None

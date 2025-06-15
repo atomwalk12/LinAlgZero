@@ -11,7 +11,7 @@ def config() -> ZeroConfig:
     config_path = get_default_config_path()
     parser = HfArgumentParser(ZeroConfig)
 
-    args: ZeroConfig = parser.parse_yaml_file(config_path)
+    (args,) = parser.parse_yaml_file(config_path)
     assert args is not None
 
 
