@@ -17,6 +17,9 @@ classifiers = [
     "Programming Language :: Python :: 3.13",
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
+dependencies = [
+    "transformers>=4.52.4",
+]
 
 [project.urls]
 Homepage = "https://atomwalk12.github.io/LinAlgZero/"
@@ -62,7 +65,7 @@ testpaths = ["tests"]
 
 [tool.ruff]
 target-version = "py39"
-line-length = 120
+line-length = 100
 fix = true
 
 [tool.ruff.lint]
@@ -117,9 +120,11 @@ skip_empty = true
 [tool.coverage.run]
 branch = true
 source = ["linalgzero"]
+omit = [
+    "*/run_training.py"
+]
 
 # Generated with: semantic-release generate-config --pyproject >> pyproject.toml
-
 [tool.semantic_release]
 assets = []
 build_command_env = []

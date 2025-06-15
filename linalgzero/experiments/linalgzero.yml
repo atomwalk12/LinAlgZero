@@ -1,0 +1,6 @@
+# Training
+batch_size: 256
+train_iterations: 1000
+print_iterations: 100
+wandb_iterations: 500
+val_iterations: 500
