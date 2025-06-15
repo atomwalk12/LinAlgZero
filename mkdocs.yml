@@ -5,7 +5,7 @@ site_description: This repository offers tools for generating a linear algebra p
 site_author: Razvan Florian Vasile
 edit_uri: edit/main/docs/
 repo_name: atomwalk12/LinAlgZero
-copyright: Maintained by <a href="https://atomwalk12.com">atomwalk12</a>.
+copyright: Maintained by <a href="https://github.com/atomwalk12">atomwalk12</a>.
 
 nav:
   - Home: index.md
