@@ -20,4 +20,5 @@ class LinAlgTrainer(ZeroTrainer):
 
     def _create_dataloaders(self) -> tuple[DataLoader, DataLoader]:
         # Create mock dataloaders that satisfy the type requirement
-        return None, None
+        # This is a placeholder implementation for testing
+        raise NotImplementedError("Mock dataloaders not implemented")
