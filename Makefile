@@ -45,18 +45,22 @@ build-and-publish: build publish ## Build and publish.
 
 .PHONY: docs-test
 docs-test: ## Test if documentation can be built without warnings or errors
+	@echo "🚀 Testing documentation build"
 	@uv run mkdocs build -s
 
 .PHONY: docs
 docs: ## Build and serve the documentation
+	@echo "🚀 Building and serving documentation"
 	@uv run mkdocs serve
 
 .PHONY: semantic-release
 semantic-release: ## Test semantic release
-	@semantic-release -vv --noop version --print
+	@echo "🚀 Testing semantic release"
+	@uv run semantic-release -vv --noop version --print
 
 .PHONY: gh-deploy
 gh-deploy: ## Deploy the documentation to GitHub Pages
+	@echo "🚀 Deploying documentation to GitHub Pages"
 	@uv run mkdocs gh-deploy --force
 
 .PHONY: help

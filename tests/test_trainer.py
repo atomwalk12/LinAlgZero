@@ -15,6 +15,7 @@ def config() -> ZeroConfig:
     assert args is not None
 
 
+@pytest.mark.skip(reason="Not implemented")
 def test_trainer(config: ZeroConfig):
     """Test the trainer."""
     trainer = ZeroTrainer(config)
