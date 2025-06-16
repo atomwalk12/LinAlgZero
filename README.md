@@ -10,3 +10,37 @@ This repository offers tools for generating a linear algebra problem dataset and
 
 - **Github repository**: <https://github.com/atomwalk12/LinAlgZero/>
 - **Documentation** <https://atomwalk12.github.io/LinAlgZero/>
+
+## Installation
+
+### PyTorch Configuration
+
+This project is configured with PyTorch defaults that work for most users:
+- **Linux**: CUDA 12.8 builds (for GPU acceleration)
+- **macOS/Windows**: CPU builds
+
+#### For Different CUDA Versions
+
+If you need a different CUDA version, you have two options:
+
+**Option 1: Use uv's automatic backend selection (Recommended)**
+```bash
+# Automatically detect your CUDA version
+UV_TORCH_BACKEND=auto uv sync
+
+# Or specify a specific CUDA version
+UV_TORCH_BACKEND=cu121 uv sync  # for CUDA 12.1
+UV_TORCH_BACKEND=cu124 uv sync  # for CUDA 12.4
+UV_TORCH_BACKEND=cpu uv sync    # for CPU-only
+```
+
+**Option 2: Override with pip-style installation**
+```bash
+# For different CUDA versions
+uv pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+
+# For CPU-only
+uv pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
+```
+
+For the available CUDA versions see the [official documentation](https://pytorch.org/get-started/locally/).
