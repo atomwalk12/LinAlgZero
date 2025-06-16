@@ -1,6 +1,22 @@
+output_path: './linalgzero/cifar10/experiments/'
+tag: 'baseline'
+
 # Training
 batch_size: 256
 train_iterations: 1000
-print_iterations: 100
-wandb_iterations: 500
 val_iterations: 500
+print_iterations: 100
+n_workers: 4
+gpu: False
+main_val_metric: 'accuracy'
+
+# Optimiser
+learning_rate: 0.001
+weight_decay: 0.0001
+
+# Logging
+log_loss_iterations: 100
+log_media_iterations: 100
+wandb_project: 'linalgzero'
+wandb_entity: 'linalgzero'
+wandb_run_name: 'baseline'
