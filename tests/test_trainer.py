@@ -2,7 +2,7 @@ import pytest
 from transformers import HfArgumentParser
 
 from linalgzero.experiments.config import ZeroConfig, get_default_config_path
-from linalgzero.trainers.trainer import ZeroTrainer
+from linalgzero.trainers.zero_trainer import LinAlgTrainer
 
 
 @pytest.fixture
@@ -13,10 +13,10 @@ def config() -> ZeroConfig:
 
     (args,) = parser.parse_yaml_file(config_path)
     assert args is not None
+    return args
 
 
-@pytest.mark.skip(reason="Not implemented")
 def test_trainer(config: ZeroConfig):
     """Test the trainer."""
-    trainer = ZeroTrainer(config)
+    trainer = LinAlgTrainer(config)
     assert trainer is not None

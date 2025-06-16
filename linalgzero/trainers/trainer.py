@@ -50,14 +50,11 @@ class ZeroTrainer(ABC):
     @abstractmethod
     def _create_model(self) -> torch.nn.Module:
         """Creates the model."""
-        raise NotImplementedError
 
     @abstractmethod
     def _create_optimizer(self) -> Optimizer:
         """Creates the optimizer."""
-        raise NotImplementedError
 
     @abstractmethod
     def _create_dataloaders(self) -> tuple[DataLoader, DataLoader]:
         """Creates the train and validation dataloaders."""
-        raise NotImplementedError
