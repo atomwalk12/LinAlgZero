@@ -1,8 +1,8 @@
 from unittest.mock import MagicMock, patch
 
 import pytest
-import wandb
 
+import wandb
 from linalgzero.experiments.config import ZeroConfig
 from linalgzero.utils.wandb_logger import WandbLogger
 

@@ -3,7 +3,6 @@ from dataclasses import asdict
 from typing import Any
 
 import wandb
-
 from linalgzero.experiments.config import ZeroConfig
 
 
