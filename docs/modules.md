@@ -1,2 +1,2 @@
-::: linalgzero.trainers.trainer
-::: linalgzero.experiments.config
+::: linalgzero.trainers.trainer.ZeroTrainer
+::: linalgzero.experiments.config.ZeroConfig
