@@ -5,7 +5,7 @@ import socket
 import subprocess
 from dataclasses import asdict
 from pathlib import Path
-from typing import Any
+from typing import Any, Union
 
 import torch
 import yaml
@@ -150,7 +150,7 @@ class SessionManager:
         )
         self.logger.info(f"Saved checkpoint to {checkpoint_path}")
 
-    def load_checkpoint(self) -> dict[str, Any] | None:
+    def load_checkpoint(self) -> Union[dict[str, Any], None]:
         """Loads the model and optimizer state."""
         checkpoint_path = self.session_path / "checkpoint.pt"
         if not checkpoint_path.exists():
