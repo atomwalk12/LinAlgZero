@@ -9,7 +9,14 @@ check: ## Run code quality tools.
 	@echo "🚀 Checking lock file consistency with 'pyproject.toml'"
 	@uv lock --locked
 	@echo "🚀 Linting code: Running pre-commit"
+ifeq ($(CI),true)
+	@echo "🔍 CI detected: Running ruff in check mode"
+	@uv run ruff check .
+	@uv run ruff format --check .
+	@uv run pre-commit run -a --skip ruff --skip ruff-format
+else
 	@uv run pre-commit run -a
+endif
 	@echo "🚀 Static type checking: Running mypy"
 	@uv run mypy
 	@echo "🚀 Checking for obsolete dependencies: Running deptry"
