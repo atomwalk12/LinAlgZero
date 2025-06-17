@@ -78,7 +78,7 @@ class TestWandbLogger:
         mock_wandb.init.return_value = None
         mock_wandb.errors = wandb.errors
 
-        logger = WandbLogger(config_with_tag, "test-project", "test-run")
+        logger = WandbLogger(config_with_tag, "test-project", "test-run", "test-entity")
 
         # Verify wandb.init was called with correct parameters
         mock_wandb.init.assert_called_once()
@@ -97,7 +97,7 @@ class TestWandbLogger:
         mock_wandb.init.return_value = None
         mock_wandb.errors = wandb.errors
 
-        logger = WandbLogger(config_without_tag, "test-project", "test-run")
+        logger = WandbLogger(config_without_tag, "test-project", "test-run", "test-entity")
 
         # Verify wandb.init was called with correct parameters
         mock_wandb.init.assert_called_once()
@@ -114,7 +114,7 @@ class TestWandbLogger:
         mock_wandb.errors = wandb.errors
         mock_wandb.init.side_effect = wandb.errors.UsageError("Not logged in")
 
-        logger = WandbLogger(config_with_tag, "test-project", "test-run")
+        logger = WandbLogger(config_with_tag, "test-project", "test-run", "test-entity")
 
         assert logger._wandb_available is False
 
@@ -124,7 +124,7 @@ class TestWandbLogger:
         mock_wandb.init.return_value = None
         mock_wandb.errors = wandb.errors
 
-        logger = WandbLogger(config_with_tag, "test-project", "test-run")
+        logger = WandbLogger(config_with_tag, "test-project", "test-run", "test-entity")
         test_data = {"loss": 0.5, "accuracy": 0.8}
 
         logger.log(test_data, step=100)
@@ -139,7 +139,7 @@ class TestWandbLogger:
         mock_wandb.errors = wandb.errors
         mock_wandb.init.side_effect = wandb.errors.UsageError("Not logged in")
 
-        logger = WandbLogger(config_with_tag, "test-project", "test-run")
+        logger = WandbLogger(config_with_tag, "test-project", "test-run", "test-entity")
         test_data = {"loss": 0.5}
 
         # Should not raise an error
@@ -154,7 +154,7 @@ class TestWandbLogger:
         mock_wandb.init.return_value = None
         mock_wandb.errors = wandb.errors
 
-        logger = WandbLogger(config_with_tag, "test-project", "test-run")
+        logger = WandbLogger(config_with_tag, "test-project", "test-run", "test-entity")
         logger.finish()
 
         mock_wandb.finish.assert_called_once()
