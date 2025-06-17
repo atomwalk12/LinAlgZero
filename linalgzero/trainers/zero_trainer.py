@@ -25,7 +25,7 @@ class LinAlgTrainer(ZeroTrainer):
 
     def create_optimizer(self) -> Optimizer:
         if self.model is None:
-            raise UninitializedError("Optimizer")
+            raise UninitializedError("Model")
 
         parameters_with_grad = filter(lambda p: p.requires_grad, self.model.parameters())
         return torch.optim.AdamW(

@@ -1,3 +1,5 @@
+import logging
+
 import torch
 
 from linalgzero.metrics.metrics import Metric
@@ -11,6 +13,7 @@ class AccuracyMetric(Metric):
         self.correct = 0.0
         self.total = 0
         self.reset()
+        self.logger = logging.getLogger(__name__)
 
     @property
     def name(self) -> str:
@@ -26,6 +29,9 @@ class AccuracyMetric(Metric):
 
         pred = torch.argmax(logits.detach(), dim=-1)
         if pred.shape != labels.shape:
+            self.logger.error(
+                f"Shape mismatch: pred.shape={pred.shape}, labels.shape={labels.shape}"
+            )
             raise IncompatibleShapesError(expected_shape=labels.shape, actual_shape=pred.shape)
 
         self.correct += (pred == labels).sum().item()

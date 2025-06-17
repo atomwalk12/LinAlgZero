@@ -42,7 +42,8 @@ class ZeroTrainer(ABC):
         self.wandb_logger = WandbLogger(
             config=config,
             project_name=config.wandb_project,
-            run_name=self.session_manager.session_path.name,
+            run_name=config.wandb_run_name or self.session_manager.session_path.name,
+            entity=config.wandb_entity or "",
         )
 
         # Components to be created by subclasses

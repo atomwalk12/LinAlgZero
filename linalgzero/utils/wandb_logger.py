@@ -9,7 +9,7 @@ from linalgzero.experiments.config import ZeroConfig
 class WandbLogger:
     """Logs metrics to Weights & Biases."""
 
-    def __init__(self, config: ZeroConfig, project_name: str, run_name: str):
+    def __init__(self, config: ZeroConfig, project_name: str, run_name: str, entity: str):
         """
         Args:
             config (ZeroConfig): The training configuration.
@@ -26,6 +26,7 @@ class WandbLogger:
         try:
             wandb.init(
                 project=project_name,
+                entity=entity,
                 name=run_name,
                 config=asdict(config),
                 tags=tags,
