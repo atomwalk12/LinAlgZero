@@ -8,7 +8,6 @@
 
 This repository offers tools for generating a linear algebra problem dataset and training an open-source base model, aiming to explore its potential for emergent reasoning as inspired by the Deepseek-R1 paper.
 
-- **Github repository**: <https://github.com/atomwalk12/LinAlgZero/>
 - **Documentation** <https://atomwalk12.github.io/LinAlgZero/>
 
 ## Installation
@@ -21,26 +20,17 @@ This project is configured with PyTorch defaults that work for most users:
 
 #### For Different CUDA Versions
 
-If you need a different CUDA version, you have two options:
+If you need a different CUDA version, run the following commands:
 
-**Option 1: Use uv's automatic backend selection (Recommended)**
 ```bash
-# Automatically detect your CUDA version
+# To automatically detect and install dependencies:
 UV_TORCH_BACKEND=auto uv sync
 
-# Or specify a specific CUDA version
+# Alternatively, to install Pytorch with a specific CUDA version:
+nvidia-smi                      # check your CUDA version
 UV_TORCH_BACKEND=cu121 uv sync  # for CUDA 12.1
 UV_TORCH_BACKEND=cu124 uv sync  # for CUDA 12.4
 UV_TORCH_BACKEND=cpu uv sync    # for CPU-only
-```
-
-**Option 2: Override with pip-style installation**
-```bash
-# For different CUDA versions
-uv pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
-
-# For CPU-only
-uv pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
 ```
 
 For the available CUDA versions see the [official documentation](https://pytorch.org/get-started/locally/).
