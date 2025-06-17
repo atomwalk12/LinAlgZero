@@ -1,5 +1,6 @@
 import json
 import tempfile
+from collections.abc import Generator
 from pathlib import Path
 
 import pytest
@@ -42,13 +43,13 @@ def config() -> ZeroConfig:
 
 
 @pytest.fixture
-def temp_dir():
+def temp_dir() -> Generator[Path, None, None]:
     """Create a temporary directory for testing."""
     with tempfile.TemporaryDirectory() as tmp_dir:
         yield Path(tmp_dir)
 
 
-def test_session_manager_init(config, temp_dir):
+def test_session_manager_init(config: ZeroConfig, temp_dir: Path) -> None:
     """Test SessionManager initialization creates session directory."""
     config.output_path = str(temp_dir)
 
@@ -77,7 +78,7 @@ def test_session_manager_init(config, temp_dir):
         assert saved_config["tag"] == config.tag
 
 
-def test_save_json(config, temp_dir):
+def test_save_json(config: ZeroConfig, temp_dir: Path) -> None:
     """Test saving JSON data to session directory."""
     config.output_path = str(temp_dir)
 
@@ -97,7 +98,7 @@ def test_save_json(config, temp_dir):
     assert loaded_data == test_data
 
 
-def test_save_and_load_checkpoint(config, temp_dir):
+def test_save_and_load_checkpoint(config: ZeroConfig, temp_dir: Path) -> None:
     """Test saving and loading model checkpoint."""
     config.output_path = str(temp_dir)
 
@@ -122,7 +123,7 @@ def test_save_and_load_checkpoint(config, temp_dir):
     assert checkpoint["best_score"] == best_score
 
 
-def test_load_checkpoint_no_file(config, temp_dir):
+def test_load_checkpoint_no_file(config: ZeroConfig, temp_dir: Path) -> None:
     """Test loading checkpoint when no checkpoint file exists."""
     config.output_path = str(temp_dir)
 
@@ -133,7 +134,7 @@ def test_load_checkpoint_no_file(config, temp_dir):
     assert checkpoint is None
 
 
-def test_session_manager_with_restore_path(config, temp_dir):
+def test_session_manager_with_restore_path(config: ZeroConfig, temp_dir: Path) -> None:
     """Test SessionManager initialization with restore path."""
     # Create a session directory first
     session_dir = temp_dir / "existing_session"
@@ -146,7 +147,7 @@ def test_session_manager_with_restore_path(config, temp_dir):
     assert session_manager.session_path == session_dir
 
 
-def test_session_manager_git_hash_comparison(config, temp_dir):
+def test_session_manager_git_hash_comparison(config: ZeroConfig, temp_dir: Path) -> None:
     """Test git hash comparison when restoring from a session with different git hash."""
     # Create a session directory with a fake git hash
     session_dir = temp_dir / "existing_session"
@@ -172,7 +173,7 @@ def test_session_manager_git_hash_comparison(config, temp_dir):
         assert stored_hash == fake_git_hash
 
 
-def test_session_manager_restore_path_not_exists(config):
+def test_session_manager_restore_path_not_exists(config: ZeroConfig) -> None:
     """Test SessionManager raises error when restore path doesn't exist."""
     config.restore_path = "/nonexistent/path"
 

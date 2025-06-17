@@ -1,4 +1,4 @@
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 import pytest
 import wandb
@@ -71,7 +71,9 @@ class TestWandbLogger:
     """Test suite for WandbLogger class."""
 
     @patch("linalgzero.utils.wandb_logger.wandb")
-    def test_init_success_with_tag(self, mock_wandb, config_with_tag):
+    def test_init_success_with_tag(
+        self, mock_wandb: MagicMock, config_with_tag: ZeroConfig
+    ) -> None:
         """Test successful initialization with tag."""
         mock_wandb.init.return_value = None
         mock_wandb.errors = wandb.errors
@@ -88,7 +90,9 @@ class TestWandbLogger:
         assert logger._wandb_available is True
 
     @patch("linalgzero.utils.wandb_logger.wandb")
-    def test_init_success_without_tag(self, mock_wandb, config_without_tag):
+    def test_init_success_without_tag(
+        self, mock_wandb: MagicMock, config_without_tag: ZeroConfig
+    ) -> None:
         """Test successful initialization without tag."""
         mock_wandb.init.return_value = None
         mock_wandb.errors = wandb.errors
@@ -105,7 +109,7 @@ class TestWandbLogger:
         assert logger._wandb_available is True
 
     @patch("linalgzero.utils.wandb_logger.wandb")
-    def test_init_wandb_error(self, mock_wandb, config_with_tag):
+    def test_init_wandb_error(self, mock_wandb: MagicMock, config_with_tag: ZeroConfig) -> None:
         """Test initialization when wandb fails."""
         mock_wandb.errors = wandb.errors
         mock_wandb.init.side_effect = wandb.errors.UsageError("Not logged in")
@@ -115,7 +119,7 @@ class TestWandbLogger:
         assert logger._wandb_available is False
 
     @patch("linalgzero.utils.wandb_logger.wandb")
-    def test_log_when_available(self, mock_wandb, config_with_tag):
+    def test_log_when_available(self, mock_wandb: MagicMock, config_with_tag: ZeroConfig) -> None:
         """Test logging when wandb is available."""
         mock_wandb.init.return_value = None
         mock_wandb.errors = wandb.errors
@@ -128,7 +132,9 @@ class TestWandbLogger:
         mock_wandb.log.assert_called_once_with(test_data, step=100)
 
     @patch("linalgzero.utils.wandb_logger.wandb")
-    def test_log_when_not_available(self, mock_wandb, config_with_tag):
+    def test_log_when_not_available(
+        self, mock_wandb: MagicMock, config_with_tag: ZeroConfig
+    ) -> None:
         """Test logging when wandb is not available."""
         mock_wandb.errors = wandb.errors
         mock_wandb.init.side_effect = wandb.errors.UsageError("Not logged in")
@@ -142,7 +148,7 @@ class TestWandbLogger:
         mock_wandb.log.assert_not_called()
 
     @patch("linalgzero.utils.wandb_logger.wandb")
-    def test_finish(self, mock_wandb, config_with_tag):
+    def test_finish(self, mock_wandb: MagicMock, config_with_tag: ZeroConfig) -> None:
         """Test finish method."""
         # This mocks the wandb.init method to return None
         mock_wandb.init.return_value = None
