@@ -40,13 +40,17 @@ class SessionManager:
         self.logger = logging.getLogger(__name__)
 
         # 3. Perform context-specific actions
-        self.logger.info(f"Created session directory: {self.session_path}")
+        self.logger.info("#" * 100)
         if config.restore_path:
             self.logger.info(f"Restoring session from {self.session_path}")
             self._compare_git_hash()
         else:
+            self.logger.info(f"Starting new session in {self.session_path}")
             self._save_config()
             self._save_git_hash()
+
+        # Print configuration in both cases
+        self._print_config()
 
     def _create_session(self) -> Path:
         """Creates a unique session directory with a descriptive name."""
@@ -64,11 +68,21 @@ class SessionManager:
 
         return session_path
 
+    def _print_config(self) -> None:
+        """Prints the current configuration to the log."""
+        config = yaml.dump(asdict(self.config), default_flow_style=False, indent=4, sort_keys=True)
+        self.logger.info("Configuration:")
+        for line in config.strip().split("\n"):
+            self.logger.info(f"    {line}")
+
     def _save_config(self) -> None:
         """Saves the config to a YAML file in the session directory."""
         config_path = self.session_path / "config.yml"
+        config = yaml.dump(asdict(self.config), default_flow_style=False, indent=4, sort_keys=True)
+
         with open(config_path, "w") as f:
-            yaml.dump(asdict(self.config), f)
+            f.write(config)
+
         self.logger.info(f"Saved config to {config_path}")
 
     def _save_git_hash(self) -> None:
