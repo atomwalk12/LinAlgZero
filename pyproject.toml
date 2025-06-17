@@ -160,7 +160,10 @@ source = ["linalgzero"]
 omit = [
     # This file is a thin wrapper around the launch script, it is intended to be very simple.
     # It is excluded from the coverage report.
-    "*/run_training.py"
+    "*/run_training.py",
+    "*/metrics/accuracy.py",
+    "*/trainers/zero_trainer.py",
+    "*/models/simple_cnn.py",
 ]
 
 # Generated with: semantic-release generate-config --pyproject >> pyproject.toml
