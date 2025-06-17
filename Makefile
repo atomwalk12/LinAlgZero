@@ -9,7 +9,14 @@ check: ## Run code quality tools.
 	@echo "🚀 Checking lock file consistency with 'pyproject.toml'"
 	@uv lock --locked
 	@echo "🚀 Linting code: Running pre-commit"
+ifeq ($(CI),true)
+	@echo "🔍 CI detected: Running ruff in check mode"
+	@uv run ruff check .
+	@uv run ruff format --check .
+	@SKIP=ruff,ruff-format uv run pre-commit run -a
+else
 	@uv run pre-commit run -a
+endif
 	@echo "🚀 Static type checking: Running mypy"
 	@uv run mypy
 	@echo "🚀 Checking for obsolete dependencies: Running deptry"
@@ -19,6 +26,11 @@ check: ## Run code quality tools.
 test: ## Test the code with pytest
 	@echo "🚀 Testing code: Running pytest"
 	@uv run python -m pytest --cov --cov-config=pyproject.toml --cov-report=xml
+
+.PHONY: coverage-site
+coverage-site: ## Generate coverage report in HTML format
+	@echo "🚀 Generating coverage report in HTML format"
+	@uv run coverage html
 
 .PHONY: build
 build: clean-build ## Build wheel file
@@ -40,18 +52,22 @@ build-and-publish: build publish ## Build and publish.
 
 .PHONY: docs-test
 docs-test: ## Test if documentation can be built without warnings or errors
+	@echo "🚀 Testing documentation build"
 	@uv run mkdocs build -s
 
 .PHONY: docs
 docs: ## Build and serve the documentation
+	@echo "🚀 Building and serving documentation"
 	@uv run mkdocs serve
 
 .PHONY: semantic-release
 semantic-release: ## Test semantic release
-	@semantic-release -vv --noop version --print
+	@echo "🚀 Testing semantic release"
+	@uv run semantic-release -vv --noop version --print
 
 .PHONY: gh-deploy
 gh-deploy: ## Deploy the documentation to GitHub Pages
+	@echo "🚀 Deploying documentation to GitHub Pages"
 	@uv run mkdocs gh-deploy --force
 
 .PHONY: help
