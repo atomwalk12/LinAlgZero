@@ -3,7 +3,7 @@ tag: 'baseline'
 
 # Training
 batch_size: 256
-train_iterations: 500
+train_iterations: 1200
 val_iterations: 200
 print_iterations: 100
 n_workers: 4

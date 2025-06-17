@@ -1,6 +1,7 @@
 from transformers import HfArgumentParser
 
-from linalgzero.experiments.config import ZeroConfig, get_default_config_path
+from linalgzero.experiments.config import ZeroConfig
+from linalgzero.utils.helpers import get_default_config_path
 
 
 def test_default_config() -> None:

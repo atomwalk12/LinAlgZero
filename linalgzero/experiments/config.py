@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from pathlib import Path
 from typing import Optional
 
 
@@ -64,9 +63,3 @@ class ZeroConfig:
     output_path: str
     tag: Optional[str]
     restore_path: Optional[str] = None
-
-
-def get_default_config_path() -> str:
-    """Get the default config file path relative to the experiments directory."""
-    script_dir = Path(__file__).parent
-    return str(script_dir / "linalgzero.yml")
