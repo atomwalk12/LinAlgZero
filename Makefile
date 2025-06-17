@@ -13,7 +13,7 @@ ifeq ($(CI),true)
 	@echo "🔍 CI detected: Running ruff in check mode"
 	@uv run ruff check .
 	@uv run ruff format --check .
-	@uv run pre-commit run -a --skip ruff --skip ruff-format
+	@SKIP=ruff,ruff-format uv run pre-commit run -a
 else
 	@uv run pre-commit run -a
 endif
