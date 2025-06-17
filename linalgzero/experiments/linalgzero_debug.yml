@@ -1,4 +1,4 @@
-output_path: './linalgzero/cifar10/experiments/'
+output_path: './linalgzero/experiment_data/cifar10/runs/'
 tag: 'baseline'
 
 # Training

@@ -12,7 +12,7 @@ import yaml
 from torch.optim import Optimizer
 
 from linalgzero.experiments.config import ZeroConfig
-from linalgzero.utils.helpers import setup_logging
+from linalgzero.utils.helpers import FileNotFoundException, setup_logging
 
 
 class SessionManager:
@@ -29,8 +29,7 @@ class SessionManager:
         if config.restore_path:
             self.session_path = Path(config.restore_path)
             if not self.session_path.exists():
-                msg = f"Restore path does not exist: {self.session_path}"
-                raise FileNotFoundError(msg)
+                raise FileNotFoundException(self.session_path)
         else:
             self.log_dir = Path(config.output_path)
             self.log_dir.mkdir(parents=True, exist_ok=True)
