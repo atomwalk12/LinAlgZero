@@ -113,6 +113,7 @@ class TestTrainer:
             wandb_project="test_project",
             wandb_entity=None,
             wandb_run_name=None,
+            seed=42,
         )
         return config
 

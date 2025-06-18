@@ -11,6 +11,8 @@ class ZeroConfig:
         train_iterations (int): Total number of training iterations.
         n_workers (int): Number of workers for the dataloader.
         gpu (bool): Whether to use the GPU.
+        seed (Optional[int]): Random seed for reproducibility. If not provided,
+            the experiment will use a random seed.
 
         print_iterations (int): Frequency (in iterations) at which to print
             training metrics to the console.
@@ -70,3 +72,4 @@ class ZeroConfig:
     # This parameter should never be defined in the config file.
     # It is used internally to restore a session.
     restore_path: Optional[str] = None
+    seed: Optional[int] = None

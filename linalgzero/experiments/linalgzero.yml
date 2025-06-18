@@ -9,6 +9,7 @@ print_iterations: 100
 n_workers: 4
 gpu: False
 main_val_metric: 'accuracy'
+seed: 300
 
 # Optimiser
 learning_rate: 0.001

@@ -12,7 +12,12 @@ from tqdm import tqdm
 
 from linalgzero.experiments.config import ZeroConfig
 from linalgzero.metrics.metrics import Metric
-from linalgzero.utils.helpers import UninitializedError, count_n_parameters, format_time
+from linalgzero.utils.helpers import (
+    UninitializedError,
+    count_n_parameters,
+    format_time,
+    set_seed,
+)
 from linalgzero.utils.session import SessionManager
 from linalgzero.utils.wandb_logger import WandbLogger
 
@@ -39,6 +44,13 @@ class ZeroTrainer(ABC):
         # Setup
         self.device = self._setup_device()
         self.session_manager = SessionManager(config)
+
+        if self.config.seed is not None:
+            set_seed(self.config.seed)
+            self.logger.info(f"Set seed to {self.config.seed}")
+        else:
+            self.logger.warning("No seed provided. Using random seed.")
+
         self.wandb_logger = WandbLogger(
             config=config,
             project_name=config.wandb_project,

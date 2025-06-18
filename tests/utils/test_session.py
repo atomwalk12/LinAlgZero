@@ -21,6 +21,7 @@ def config() -> ZeroConfig:
         train_iterations=100,
         n_workers=4,
         gpu=False,
+        seed=42,
         # Logging and validation frequencies
         print_iterations=10,
         log_loss_iterations=10,
