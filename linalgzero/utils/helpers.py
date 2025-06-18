@@ -1,7 +1,12 @@
 import logging
+import os
+import random
 from pathlib import Path
 
+import numpy as np
+import torch
 import torch.nn as nn
+from xxhash import xxh128
 
 
 class IncompatibleShapesError(ValueError):
@@ -23,6 +28,13 @@ class FileNotFoundException(FileNotFoundError):
 
     def __init__(self, file_path: Path) -> None:
         super().__init__(f"File not found: {file_path}")
+
+
+class DirectoryNotFoundException(FileNotFoundError):
+    """Exception raised when a directory is not found."""
+
+    def __init__(self, directory_path: Path) -> None:
+        super().__init__(f"Directory not found: {directory_path}")
 
 
 class InvalidTypeError(ValueError):
@@ -91,3 +103,53 @@ def count_n_parameters(model: nn.Module, only_trainable: bool = False) -> float:
     else:
         n_parameters = sum(p.numel() for p in model.parameters())
     return n_parameters / 10**6
+
+
+def set_seed(seed: int) -> None:
+    """Sets the seed for reproducibility.
+
+    Args:
+        seed (int): The seed to use.
+    """
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed(seed)
+        torch.cuda.manual_seed_all(seed)
+        torch.backends.cudnn.deterministic = True
+        torch.backends.cudnn.benchmark = False
+    os.environ["PYTHONHASHSEED"] = str(seed)
+
+
+def xxhash_update_from_file(filepath: Path, hash_obj: xxh128) -> None:
+    """Update hash with file contents"""
+    if not Path(filepath).is_file():
+        raise FileNotFoundException(filepath)
+
+    with open(filepath, "rb") as f:
+        # Read in chunks to handle large files efficiently
+        for chunk in iter(lambda: f.read(8192), b""):
+            hash_obj.update(chunk)
+
+
+def xxhash_update_from_dir(directory: Path, hash_obj: xxh128) -> None:
+    """Recursively update hash with directory contents"""
+    if not Path(directory).is_dir():
+        raise DirectoryNotFoundException(directory)
+
+    for path in sorted(Path(directory).iterdir(), key=lambda p: str(p).lower()):
+        # Hash the path name
+        hash_obj.update(path.name.encode())
+
+        if path.is_file():
+            xxhash_update_from_file(path, hash_obj)
+        elif path.is_dir():
+            xxhash_update_from_dir(path, hash_obj)
+
+
+def xxhash_dir(directory: Path) -> str:
+    """Calculate xxhash for entire directory"""
+    hash_obj = xxh128()
+    xxhash_update_from_dir(directory, hash_obj)
+    return hash_obj.hexdigest()

@@ -68,8 +68,9 @@ class ZeroConfig:
     # session directory name.
     wandb_run_name: Optional[str] = None
     tags: Optional[list[str]] = None
-
-    # This parameter should never be defined in the config file.
-    # It is used internally to restore a session.
-    restore_path: Optional[str] = None
     seed: Optional[int] = None
+
+    # These parameters should never be defined in the config file.
+    # They are used internally to restore a session.
+    restore_path: Optional[str] = None
+    dataset_hash: Optional[str] = None
