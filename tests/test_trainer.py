@@ -369,3 +369,25 @@ class TestTrainer:
         # Validation should switch to eval mode and back
         trainer._validate()
         assert trainer.model.training  # Should be back in train mode after validation
+
+    def test_load_checkpoint(self, trainer: MockTrainer) -> None:
+        """Test loading checkpoint functionality."""
+        trainer._setup()
+
+        # Mock a checkpoint with some data
+        mock_checkpoint = {
+            "model": trainer.model.state_dict(),
+            "optimizer": trainer.optimizer.state_dict(),
+            "global_step": 42,
+            "best_score": 0.95,
+        }
+        trainer.session_manager.load_checkpoint.return_value = mock_checkpoint
+
+        # Load the checkpoint
+        trainer._load_checkpoint()
+
+        # Verify state was updated
+        assert trainer.global_step == 42
+        assert trainer.best_score == 0.95
+        assert trainer.session_manager.load_checkpoint.call_count == 2
+        trainer.session_manager.load_checkpoint.assert_called_with(tag="last")
