@@ -1,6 +1,45 @@
 # CHANGELOG
 
 
+## v0.3.0 (2025-06-18)
+
+### Bug Fixes
+
+- Update ZeroConfig to support multiple tags and adjust related components
+  ([`5b81a1f`](https://github.com/atomwalk12/LinAlgZero/commit/5b81a1f7a008b50e5368ca332258a16d75c2196b))
+
+### Documentation
+
+- Update documentation page for better organization
+  ([`bffdd40`](https://github.com/atomwalk12/LinAlgZero/commit/bffdd402deaed8bdb3261a1fae9b3bbca081da15))
+
+### Features
+
+- Add hash code for the experimental dataset to ensure better traceability and reproducibility
+  ([`e343a7f`](https://github.com/atomwalk12/LinAlgZero/commit/e343a7f93a124662a09c49736645732ccef2ef7b))
+
+- Uses xxhash function which is both fast and has low conflict rate - The hash code is generally set
+  during the creation of the dataset - The hash function creates a hash code recursively for all
+  files in the dataset folder
+
+- Add seed for reproducible experiments
+  ([`89b9707`](https://github.com/atomwalk12/LinAlgZero/commit/89b9707a18ce6c73b03071c915dfb2b3eae86e61))
+
+- added as a mandatory config parameter - if no seed is provided, a warning is reported but the
+  experiment still runs
+
+- Ensure that both best and last checkpoints are saved during training.
+  ([`a301f4f`](https://github.com/atomwalk12/LinAlgZero/commit/a301f4fd36f9fa8d5897624fa9a35e42455e77c1))
+
+- Updated _save_checkpoint and _load_checkpoint methods to accept a tag parameter. - Adjusted
+  logging messages to reflect the specific checkpoint type being saved or loaded.
+
+### Testing
+
+- Add tests for checkpoint loading and dataset hash management
+  ([`4eee826`](https://github.com/atomwalk12/LinAlgZero/commit/4eee826117f903d28ec9d6a5fff1e11218a3908c))
+
+
 ## v0.2.0 (2025-06-17)
 
 ### Bug Fixes
