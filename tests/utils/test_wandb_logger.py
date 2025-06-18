@@ -32,7 +32,7 @@ def config_with_tag() -> ZeroConfig:
         wandb_run_name=None,
         # Path arguments
         output_path="test_output",
-        tag="test-experiment",
+        tags=["test-experiment"],
         restore_path=None,
     )
 
@@ -62,7 +62,7 @@ def config_without_tag() -> ZeroConfig:
         wandb_run_name=None,
         # Path arguments
         output_path="test_output",
-        tag=None,
+        tags=None,
         restore_path=None,
     )
 
@@ -86,7 +86,7 @@ class TestWandbLogger:
         assert call_args[1]["project"] == "test-project"
         assert call_args[1]["name"] == "test-run"
         assert call_args[1]["tags"] == ["test-experiment"]
-        assert call_args[1]["config"]["tag"] == "test-experiment"
+        assert call_args[1]["config"]["tags"] == ["test-experiment"]
         assert logger._wandb_available is True
 
     @patch("linalgzero.utils.wandb_logger.wandb")
@@ -105,7 +105,7 @@ class TestWandbLogger:
         assert call_args[1]["project"] == "test-project"
         assert call_args[1]["name"] == "test-run"
         assert call_args[1]["tags"] == []
-        assert call_args[1]["config"]["tag"] is None
+        assert call_args[1]["config"]["tags"] is None
         assert logger._wandb_available is True
 
     @patch("linalgzero.utils.wandb_logger.wandb")

@@ -22,7 +22,7 @@ class ZeroConfig:
             validation loop.
 
         output_path (str): The root directory for logs.
-        tag (Optional[str]): A descriptive tag for the run.
+        tags (Optional[List[str]]): A list of descriptive tags for the run.
         restore_path (Optional[str]): Path to a session directory to restore.
 
         main_val_metric (str): The primary validation metric for checkpointing.
@@ -31,8 +31,9 @@ class ZeroConfig:
         weight_decay (float): The weight decay for the optimizer.
 
         wandb_project (str): Project name for Weights & Biases.
-        wandb_entity (Optional[str]): Entity for Weights & Biases.
-        wandb_run_name (Optional[str]): Run name for Weights & Biases.
+        wandb_entity (str): Entity for Weights & Biases.
+        wandb_run_name (Optional[str]): Run name for Weights & Biases. If None,
+            the run name will be the session name where results are stored.
     """
 
     # Core training arguments
@@ -54,12 +55,18 @@ class ZeroConfig:
     learning_rate: float
     weight_decay: float
 
-    # W&B arguments
-    wandb_project: str
-    wandb_entity: Optional[str]
-    wandb_run_name: Optional[str]
-
     # Path arguments
     output_path: str
-    tag: Optional[str]
+
+    # W&B arguments
+    wandb_project: str
+    wandb_entity: str
+
+    # It is recommended to not set this parameter, as it will default to the
+    # session directory name.
+    wandb_run_name: Optional[str] = None
+    tags: Optional[list[str]] = None
+
+    # This parameter should never be defined in the config file.
+    # It is used internally to restore a session.
     restore_path: Optional[str] = None

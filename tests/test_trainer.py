@@ -109,7 +109,7 @@ class TestTrainer:
             gpu=False,
             output_path="test_output",
             restore_path=None,
-            tag=None,
+            tags=None,
             wandb_project="test_project",
             wandb_entity=None,
             wandb_run_name=None,

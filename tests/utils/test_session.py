@@ -37,7 +37,7 @@ def config() -> ZeroConfig:
         wandb_run_name=None,
         # Path arguments
         output_path="test_output",
-        tag="test",
+        tags=["test"],
         restore_path=None,
     )
 
@@ -75,7 +75,7 @@ def test_session_manager_init(config: ZeroConfig, temp_dir: Path) -> None:
     with open(config_path) as f:
         saved_config = yaml.safe_load(f)
         assert saved_config["batch_size"] == config.batch_size
-        assert saved_config["tag"] == config.tag
+        assert saved_config["tags"] == config.tags
 
 
 def test_save_json(config: ZeroConfig, temp_dir: Path) -> None:

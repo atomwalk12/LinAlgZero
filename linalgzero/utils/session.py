@@ -59,8 +59,8 @@ class SessionManager:
         hostname = socket.gethostname()
 
         session_name_parts = [f"session_{timestamp}", hostname]
-        if self.config.tag:
-            session_name_parts.append(self.config.tag)
+        if self.config.tags:
+            session_name_parts.extend(self.config.tags)
 
         session_name = "_".join(session_name_parts)
         session_path = self.log_dir / session_name

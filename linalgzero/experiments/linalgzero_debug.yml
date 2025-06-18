@@ -1,5 +1,5 @@
 output_path: './linalgzero/experiment_data/cifar10/runs/'
-tag: 'baseline'
+tags: ['baseline', 'debug']
 
 # Training
 batch_size: 256
@@ -18,5 +18,4 @@ weight_decay: 0.0001
 log_loss_iterations: 100
 log_media_iterations: 100
 wandb_project: 'linalgzero'
-wandb_entity: 'linalgzero'
-wandb_run_name: 'baseline'
+wandb_entity: 'atomwalks'
