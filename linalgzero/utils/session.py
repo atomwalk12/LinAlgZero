@@ -136,9 +136,10 @@ class SessionManager:
         optimizer: Optimizer,
         global_step: int,
         best_score: float,
+        tag: str,
     ) -> None:
         """Saves the model and optimizer state."""
-        checkpoint_path = self.session_path / "checkpoint.pt"
+        checkpoint_path = self.session_path / f"checkpoint_{tag}.pt"
         torch.save(
             {
                 "model": model.state_dict(),
@@ -148,13 +149,13 @@ class SessionManager:
             },
             checkpoint_path,
         )
-        self.logger.info(f"Saved checkpoint to {checkpoint_path}")
+        self.logger.info(f"Saved {tag} checkpoint to {checkpoint_path}")
 
-    def load_checkpoint(self) -> Union[dict[str, Any], None]:
+    def load_checkpoint(self, tag: str) -> Union[dict[str, Any], None]:
         """Loads the model and optimizer state."""
-        checkpoint_path = self.session_path / "checkpoint.pt"
+        checkpoint_path = self.session_path / f"checkpoint_{tag}.pt"
         if not checkpoint_path.exists():
-            self.logger.info("No checkpoint found.")
+            self.logger.info(f"No checkpoint found with tag '{tag}'.")
             return None
 
         self.logger.info(f"Loading checkpoint from {checkpoint_path}")

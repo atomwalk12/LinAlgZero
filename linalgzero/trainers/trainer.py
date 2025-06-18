@@ -134,12 +134,15 @@ class ZeroTrainer(ABC):
             # Save checkpoint if new best score
             if score > self.best_score:
                 self.logger.info(
-                    f"New best score: {self.best_score:.3f} -> {score:.3f}. Saving checkpoint."
+                    f"New best score: {self.best_score:.3f} -> {score:.3f}. Saving best checkpoint."
                 )
                 self.best_score = score
-                self._save_checkpoint()
+                self._save_checkpoint(tag="best")
             else:
                 self.logger.info(f"Score {score:.3f} did not improve from {self.best_score:.3f}.")
+
+            self._save_checkpoint(tag="last")
+
             self.logger.info("-" * 100)
 
     def _validate(self) -> float:
@@ -166,7 +169,7 @@ class ZeroTrainer(ABC):
         self.logger.info(f"Validation loss: {avg_loss:.4f}")
 
         # Compute metrics
-        self.logger.info("Metrics")
+        self.logger.info("Metrics:")
         train_scores = {name: metric.compute() for name, metric in self.train_metrics.items()}
         val_scores = {name: metric.compute() for name, metric in self.val_metrics.items()}
         for name, score in train_scores.items():
@@ -219,7 +222,7 @@ class ZeroTrainer(ABC):
 
         return loss.item()
 
-    def _save_checkpoint(self) -> None:
+    def _save_checkpoint(self, tag: str) -> None:
         """Saves the current training state."""
         if self.model is None:
             raise UninitializedError("Model")
@@ -232,12 +235,13 @@ class ZeroTrainer(ABC):
             optimizer=self.optimizer,
             global_step=self.global_step,
             best_score=self.best_score,
+            tag=tag,
         )
 
     def _load_checkpoint(self) -> None:
         """Loads the training state from a checkpoint."""
         # Load checkpoint
-        checkpoint = self.session_manager.load_checkpoint()
+        checkpoint = self.session_manager.load_checkpoint(tag="last")
 
         if checkpoint is None:
             return
