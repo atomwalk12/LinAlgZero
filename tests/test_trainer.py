@@ -109,10 +109,11 @@ class TestTrainer:
             gpu=False,
             output_path="test_output",
             restore_path=None,
-            tag=None,
+            tags=None,
             wandb_project="test_project",
             wandb_entity=None,
             wandb_run_name=None,
+            seed=42,
         )
         return config
 
@@ -267,7 +268,7 @@ class TestTrainer:
         trainer.best_score = 0.9
 
         # Test saving
-        trainer._save_checkpoint()
+        trainer._save_checkpoint(tag="last")
         trainer.session_manager.save_checkpoint.assert_called_once()  # type: ignore[attr-defined]
 
         # Test loading (mock returns None, so no state should change)
@@ -321,7 +322,14 @@ class TestTrainer:
 
         # Score should have improved (mock returns 0.8)
         assert trainer.best_score > initial_best_score
-        trainer.session_manager.save_checkpoint.assert_called_once()  # type: ignore[attr-defined]
+
+        # Should be called twice: once for "best" and once for "last"
+        assert trainer.session_manager.save_checkpoint.call_count == 2  # type: ignore[attr-defined]
+
+        # Verify the calls were made with the correct tags
+        calls = trainer.session_manager.save_checkpoint.call_args_list  # type: ignore[attr-defined]
+        assert calls[0].kwargs["tag"] == "best"
+        assert calls[1].kwargs["tag"] == "last"
 
     def test_get_next_batch_iteration(self, trainer: MockTrainer) -> None:
         """Test batch iteration and dataloader restart."""
@@ -361,3 +369,25 @@ class TestTrainer:
         # Validation should switch to eval mode and back
         trainer._validate()
         assert trainer.model.training  # Should be back in train mode after validation
+
+    def test_load_checkpoint(self, trainer: MockTrainer) -> None:
+        """Test loading checkpoint functionality."""
+        trainer._setup()
+
+        # Mock a checkpoint with some data
+        mock_checkpoint = {
+            "model": trainer.model.state_dict(),
+            "optimizer": trainer.optimizer.state_dict(),
+            "global_step": 42,
+            "best_score": 0.95,
+        }
+        trainer.session_manager.load_checkpoint.return_value = mock_checkpoint
+
+        # Load the checkpoint
+        trainer._load_checkpoint()
+
+        # Verify state was updated
+        assert trainer.global_step == 42
+        assert trainer.best_score == 0.95
+        assert trainer.session_manager.load_checkpoint.call_count == 2
+        trainer.session_manager.load_checkpoint.assert_called_with(tag="last")

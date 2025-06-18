@@ -28,7 +28,7 @@
 
   [data-md-color-scheme="astral-light"] {
     --md-default-bg-color--dark: var(--black);
-    --md-primary-fg-color: var(--galaxy);
+    --md-primary-fg-color: var(--space);
     --md-typeset-a-color: var(--flare);
     --md-accent-fg-color: var(--cosmic);
   }

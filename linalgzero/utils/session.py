@@ -12,7 +12,7 @@ import yaml
 from torch.optim import Optimizer
 
 from linalgzero.experiments.config import ZeroConfig
-from linalgzero.utils.helpers import FileNotFoundException, setup_logging
+from linalgzero.utils.helpers import FileNotFoundException, setup_logging, xxhash_dir
 
 
 class SessionManager:
@@ -59,8 +59,8 @@ class SessionManager:
         hostname = socket.gethostname()
 
         session_name_parts = [f"session_{timestamp}", hostname]
-        if self.config.tag:
-            session_name_parts.append(self.config.tag)
+        if self.config.tags:
+            session_name_parts.extend(self.config.tags)
 
         session_name = "_".join(session_name_parts)
         session_path = self.log_dir / session_name
@@ -123,6 +123,41 @@ class SessionManager:
             self.logger.warning(f"Previous: {previous_git_hash}")
             self.logger.warning(f"Current:  {current_git_hash}")
 
+    def manage_dataset_hash(self, dataset_path: Path) -> None:
+        """Manages the dataset hash for reproducibility.
+
+        For a new run, it computes and saves the dataset hash to the config.
+        For a restored run, it compares the current hash with the stored one.
+
+        Args:
+            dataset_path (Path): The path to the dataset directory.
+        """
+        if not dataset_path.exists() or not dataset_path.is_dir():
+            self.logger.warning(f"Dataset directory {dataset_path} not found. Cannot check hash.")
+            return
+
+        current_hash = xxhash_dir(dataset_path)
+
+        if self.config.restore_path is None:
+            # New run. Save the hash to the config and persist it.
+            self.config.dataset_hash = current_hash
+            self.logger.info(f"Dataset hash: {current_hash}")
+            self._save_config()  # Overwrite config with the new hash
+        else:
+            # Restored run. Compare hashes.
+            if self.config.dataset_hash is None:
+                self.logger.warning(
+                    "No dataset hash found in restored config. "
+                    f"Current dataset hash is {current_hash}."
+                )
+            elif self.config.dataset_hash != current_hash:
+                self.logger.warning(
+                    "Dataset hash mismatch! "
+                    f"Expected {self.config.dataset_hash}, got {current_hash}."
+                )
+            else:
+                self.logger.info("Dataset hash matches the one from the restored session.")
+
     def save_json(self, data: dict[str, Any], filename: str) -> None:
         """Saves a dictionary to a JSON file in the session directory."""
         file_path = self.session_path / filename
@@ -136,9 +171,10 @@ class SessionManager:
         optimizer: Optimizer,
         global_step: int,
         best_score: float,
+        tag: str,
     ) -> None:
         """Saves the model and optimizer state."""
-        checkpoint_path = self.session_path / "checkpoint.pt"
+        checkpoint_path = self.session_path / f"checkpoint_{tag}.pt"
         torch.save(
             {
                 "model": model.state_dict(),
@@ -148,13 +184,13 @@ class SessionManager:
             },
             checkpoint_path,
         )
-        self.logger.info(f"Saved checkpoint to {checkpoint_path}")
+        self.logger.info(f"Saved {tag} checkpoint to {checkpoint_path}")
 
-    def load_checkpoint(self) -> Union[dict[str, Any], None]:
+    def load_checkpoint(self, tag: str) -> Union[dict[str, Any], None]:
         """Loads the model and optimizer state."""
-        checkpoint_path = self.session_path / "checkpoint.pt"
+        checkpoint_path = self.session_path / f"checkpoint_{tag}.pt"
         if not checkpoint_path.exists():
-            self.logger.info("No checkpoint found.")
+            self.logger.info(f"No checkpoint found with tag '{tag}'.")
             return None
 
         self.logger.info(f"Loading checkpoint from {checkpoint_path}")

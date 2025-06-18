@@ -25,6 +25,8 @@ dependencies = [
     # "torchaudio>=2.7.0",
     "pyyaml>=6.0.2",
     "tqdm>=4.67.1",
+    "xxhash>=3.5.0",
+    "numpy>=2.0.2",
 ]
 
 

@@ -19,9 +19,9 @@ class WandbLogger:
         self.logger = logging.getLogger(__name__)
 
         # Prepare wandb tags
-        tags = []
-        if config.tag:
-            tags.append(config.tag)
+        tags: list[str] = []
+        if config.tags:
+            tags.extend(config.tags)
 
         try:
             wandb.init(

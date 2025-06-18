@@ -21,6 +21,7 @@ def config() -> ZeroConfig:
         train_iterations=100,
         n_workers=4,
         gpu=False,
+        seed=42,
         # Logging and validation frequencies
         print_iterations=10,
         log_loss_iterations=10,
@@ -37,7 +38,7 @@ def config() -> ZeroConfig:
         wandb_run_name=None,
         # Path arguments
         output_path="test_output",
-        tag="test",
+        tags=["test"],
         restore_path=None,
     )
 
@@ -75,7 +76,7 @@ def test_session_manager_init(config: ZeroConfig, temp_dir: Path) -> None:
     with open(config_path) as f:
         saved_config = yaml.safe_load(f)
         assert saved_config["batch_size"] == config.batch_size
-        assert saved_config["tag"] == config.tag
+        assert saved_config["tags"] == config.tags
 
 
 def test_save_json(config: ZeroConfig, temp_dir: Path) -> None:
@@ -111,10 +112,10 @@ def test_save_and_load_checkpoint(config: ZeroConfig, temp_dir: Path) -> None:
     best_score = 0.95
 
     # Save checkpoint
-    session_manager.save_checkpoint(model, optimizer, global_step, best_score)
+    session_manager.save_checkpoint(model, optimizer, global_step, best_score, tag="last")
 
     # Load checkpoint
-    checkpoint = session_manager.load_checkpoint()
+    checkpoint = session_manager.load_checkpoint("last")
 
     assert checkpoint is not None
     assert "model" in checkpoint
@@ -129,7 +130,7 @@ def test_load_checkpoint_no_file(config: ZeroConfig, temp_dir: Path) -> None:
 
     session_manager = SessionManager(config)
 
-    checkpoint = session_manager.load_checkpoint()
+    checkpoint = session_manager.load_checkpoint("last")
 
     assert checkpoint is None
 
@@ -179,3 +180,125 @@ def test_session_manager_restore_path_not_exists(config: ZeroConfig) -> None:
 
     with pytest.raises(FileNotFoundError):
         SessionManager(config)
+
+
+def test_manage_dataset_hash_nonexistent_path(config: ZeroConfig, temp_dir: Path) -> None:
+    """Test manage_dataset_hash when dataset path doesn't exist."""
+    config.output_path = str(temp_dir)
+    session_manager = SessionManager(config)
+
+    nonexistent_path = temp_dir / "nonexistent_dataset"
+
+    # Should not raise an exception, just log warning and return
+    session_manager.manage_dataset_hash(nonexistent_path)
+
+    # Config should remain unchanged
+    assert session_manager.config.dataset_hash is None
+
+
+def test_manage_dataset_hash_new_run(config: ZeroConfig, temp_dir: Path) -> None:
+    """Test manage_dataset_hash for a new run (no restore_path)."""
+    config.output_path = str(temp_dir)
+    config.restore_path = None  # Ensure it's a new run
+
+    # Create a fake dataset directory with some files
+    dataset_dir = temp_dir / "dataset"
+    dataset_dir.mkdir()
+    (dataset_dir / "file1.txt").write_text("test data 1")
+    (dataset_dir / "file2.txt").write_text("test data 2")
+
+    session_manager = SessionManager(config)
+
+    # Before calling manage_dataset_hash, dataset_hash should be None
+    assert session_manager.config.dataset_hash is None
+
+    session_manager.manage_dataset_hash(dataset_dir)
+
+    # After calling, dataset_hash should be set
+    assert session_manager.config.dataset_hash is not None
+    assert len(session_manager.config.dataset_hash) > 0
+
+    # Config should have been saved with the hash
+    config_path = session_manager.session_path / "config.yml"
+    assert config_path.exists()
+    with open(config_path) as f:
+        saved_config = yaml.safe_load(f)
+        assert saved_config["dataset_hash"] == session_manager.config.dataset_hash
+
+
+def test_manage_dataset_hash_restored_run_no_hash_in_config(
+    config: ZeroConfig, temp_dir: Path
+) -> None:
+    """Test manage_dataset_hash for restored run with no dataset_hash in config."""
+    # Create a session directory to restore from
+    session_dir = temp_dir / "existing_session"
+    session_dir.mkdir()
+
+    # Create a fake dataset directory
+    dataset_dir = temp_dir / "dataset"
+    dataset_dir.mkdir()
+    (dataset_dir / "file1.txt").write_text("test data")
+
+    config.restore_path = str(session_dir)
+    config.dataset_hash = None  # No hash in the restored config
+
+    session_manager = SessionManager(config)
+
+    # Should not raise an exception, just log warning
+    session_manager.manage_dataset_hash(dataset_dir)
+
+    # Config dataset_hash should still be None
+    assert session_manager.config.dataset_hash is None
+
+
+def test_manage_dataset_hash_restored_run_matching_hash(config: ZeroConfig, temp_dir: Path) -> None:
+    """Test manage_dataset_hash for restored run with matching hash."""
+    # Create a session directory to restore from
+    session_dir = temp_dir / "existing_session"
+    session_dir.mkdir()
+
+    # Create a fake dataset directory
+    dataset_dir = temp_dir / "dataset"
+    dataset_dir.mkdir()
+    (dataset_dir / "file1.txt").write_text("test data")
+
+    # Calculate the expected hash
+    from linalgzero.utils.helpers import xxhash_dir
+
+    expected_hash = xxhash_dir(dataset_dir)
+
+    config.restore_path = str(session_dir)
+    config.dataset_hash = expected_hash  # Set matching hash
+
+    session_manager = SessionManager(config)
+
+    # Should not raise an exception, just log success
+    session_manager.manage_dataset_hash(dataset_dir)
+
+    # Hash should remain the same
+    assert session_manager.config.dataset_hash == expected_hash
+
+
+def test_manage_dataset_hash_restored_run_mismatched_hash(
+    config: ZeroConfig, temp_dir: Path
+) -> None:
+    """Test manage_dataset_hash for restored run with mismatched hash."""
+    # Create a session directory to restore from
+    session_dir = temp_dir / "existing_session"
+    session_dir.mkdir()
+
+    # Create a fake dataset directory
+    dataset_dir = temp_dir / "dataset"
+    dataset_dir.mkdir()
+    (dataset_dir / "file1.txt").write_text("test data")
+
+    config.restore_path = str(session_dir)
+    config.dataset_hash = "fake_hash_that_wont_match"  # Set mismatched hash
+
+    session_manager = SessionManager(config)
+
+    # Should not raise an exception, just log warning
+    session_manager.manage_dataset_hash(dataset_dir)
+
+    # Hash should remain the original (mismatched) value
+    assert session_manager.config.dataset_hash == "fake_hash_that_wont_match"
