@@ -1306,13 +1306,24 @@ visual feedback on model performance.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code><span title="linalgzero.experiments.config.ZeroConfig.n_workers">n_workers</span></code></td>
+            <td><code><span title="linalgzero.experiments.config.ZeroConfig.learning_rate">learning_rate</span></code></td>
             <td>
-                  <code><span title="int">int</span></code>
+                  <code><span title="float">float</span></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Number of workers for the dataloader.</p>
+                <p>The learning rate for the optimizer.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="linalgzero.experiments.config.ZeroConfig.weight_decay">weight_decay</span></code></td>
+            <td>
+                  <code><span title="float">float</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The weight decay for the optimizer.</p>
               </div>
             </td>
           </tr>
@@ -1324,6 +1335,52 @@ visual feedback on model performance.</p>
             <td>
               <div class="doc-md-description">
                 <p>Whether to use the GPU.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="linalgzero.experiments.config.ZeroConfig.n_workers">n_workers</span></code></td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Number of workers for the dataloader.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="linalgzero.experiments.config.ZeroConfig.seed">seed</span></code></td>
+            <td>
+                  <code><span title="typing.Optional">Optional</span>[<span title="int">int</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Random seed for reproducibility. If not provided,
+the experiment will use a random seed.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="linalgzero.experiments.config.ZeroConfig.val_iterations">val_iterations</span></code></td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Frequency (in iterations) at which to run the
+validation loop.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="linalgzero.experiments.config.ZeroConfig.main_val_metric">main_val_metric</span></code></td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The primary validation metric for checkpointing.</p>
               </div>
             </td>
           </tr>
@@ -1364,18 +1421,6 @@ visualize samples and log media.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code><span title="linalgzero.experiments.config.ZeroConfig.val_iterations">val_iterations</span></code></td>
-            <td>
-                  <code><span title="int">int</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Frequency (in iterations) at which to run the
-validation loop.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
             <td><code><span title="linalgzero.experiments.config.ZeroConfig.output_path">output_path</span></code></td>
             <td>
                   <code><span title="str">str</span></code>
@@ -1383,17 +1428,6 @@ validation loop.</p>
             <td>
               <div class="doc-md-description">
                 <p>The root directory for logs.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="linalgzero.experiments.config.ZeroConfig.tag">tag</span></code></td>
-            <td>
-                  <code><span title="typing.Optional">Optional</span>[<span title="str">str</span>]</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>A descriptive tag for the run.</p>
               </div>
             </td>
           </tr>
@@ -1409,35 +1443,13 @@ validation loop.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code><span title="linalgzero.experiments.config.ZeroConfig.main_val_metric">main_val_metric</span></code></td>
+            <td><code><span title="linalgzero.experiments.config.ZeroConfig.tags">tags</span></code></td>
             <td>
-                  <code><span title="str">str</span></code>
+                  <code><span title="typing.Optional">Optional</span>[<span title="List">List</span>[<span title="str">str</span>]]</code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>The primary validation metric for checkpointing.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="linalgzero.experiments.config.ZeroConfig.learning_rate">learning_rate</span></code></td>
-            <td>
-                  <code><span title="float">float</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>The learning rate for the optimizer.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="linalgzero.experiments.config.ZeroConfig.weight_decay">weight_decay</span></code></td>
-            <td>
-                  <code><span title="float">float</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>The weight decay for the optimizer.</p>
+                <p>A list of descriptive tags for the run.</p>
               </div>
             </td>
           </tr>
@@ -1455,7 +1467,7 @@ validation loop.</p>
           <tr class="doc-section-item">
             <td><code><span title="linalgzero.experiments.config.ZeroConfig.wandb_entity">wandb_entity</span></code></td>
             <td>
-                  <code><span title="typing.Optional">Optional</span>[<span title="str">str</span>]</code>
+                  <code><span title="str">str</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -1470,7 +1482,8 @@ validation loop.</p>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Run name for Weights &amp; Biases.</p>
+                <p>Run name for Weights &amp; Biases. If None,
+the run name will be the session name where results are stored.</p>
               </div>
             </td>
           </tr>
