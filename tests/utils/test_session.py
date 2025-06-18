@@ -111,10 +111,10 @@ def test_save_and_load_checkpoint(config: ZeroConfig, temp_dir: Path) -> None:
     best_score = 0.95
 
     # Save checkpoint
-    session_manager.save_checkpoint(model, optimizer, global_step, best_score)
+    session_manager.save_checkpoint(model, optimizer, global_step, best_score, tag="last")
 
     # Load checkpoint
-    checkpoint = session_manager.load_checkpoint()
+    checkpoint = session_manager.load_checkpoint("last")
 
     assert checkpoint is not None
     assert "model" in checkpoint
@@ -129,7 +129,7 @@ def test_load_checkpoint_no_file(config: ZeroConfig, temp_dir: Path) -> None:
 
     session_manager = SessionManager(config)
 
-    checkpoint = session_manager.load_checkpoint()
+    checkpoint = session_manager.load_checkpoint("last")
 
     assert checkpoint is None
 
