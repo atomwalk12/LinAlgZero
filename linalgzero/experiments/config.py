@@ -9,10 +9,17 @@ class ZeroConfig:
     Attributes:
         batch_size (int): Number of samples processed in each training batch.
         train_iterations (int): Total number of training iterations.
-        n_workers (int): Number of workers for the dataloader.
+        learning_rate (float): The learning rate for the optimizer.
+        weight_decay (float): The weight decay for the optimizer.
+
         gpu (bool): Whether to use the GPU.
+        n_workers (int): Number of workers for the dataloader.
         seed (Optional[int]): Random seed for reproducibility. If not provided,
             the experiment will use a random seed.
+
+        val_iterations (int): Frequency (in iterations) at which to run the
+            validation loop.
+        main_val_metric (str): The primary validation metric for checkpointing.
 
         print_iterations (int): Frequency (in iterations) at which to print
             training metrics to the console.
@@ -20,17 +27,10 @@ class ZeroConfig:
             the training loss.
         log_media_iterations (int): Frequency (in iterations) at which to
             visualize samples and log media.
-        val_iterations (int): Frequency (in iterations) at which to run the
-            validation loop.
 
         output_path (str): The root directory for logs.
-        tags (Optional[List[str]]): A list of descriptive tags for the run.
         restore_path (Optional[str]): Path to a session directory to restore.
-
-        main_val_metric (str): The primary validation metric for checkpointing.
-
-        learning_rate (float): The learning rate for the optimizer.
-        weight_decay (float): The weight decay for the optimizer.
+        tags (Optional[List[str]]): A list of descriptive tags for the run.
 
         wandb_project (str): Project name for Weights & Biases.
         wandb_entity (str): Entity for Weights & Biases.
@@ -41,21 +41,21 @@ class ZeroConfig:
     # Core training arguments
     batch_size: int
     train_iterations: int
-    n_workers: int
-    gpu: bool
+    learning_rate: float
+    weight_decay: float
 
-    # Logging and validation frequencies
+    # Infrastructure settings
+    gpu: bool
+    n_workers: int
+
+    # Validation configuration
+    val_iterations: int
+    main_val_metric: str
+
+    # Logging frequencies
     print_iterations: int
     log_loss_iterations: int
     log_media_iterations: int
-    val_iterations: int
-
-    # Metric arguments
-    main_val_metric: str
-
-    # Optimizer arguments
-    learning_rate: float
-    weight_decay: float
 
     # Path arguments
     output_path: str
@@ -64,11 +64,13 @@ class ZeroConfig:
     wandb_project: str
     wandb_entity: str
 
+    # Optional parameters with defaults
+    seed: Optional[int] = None
+    tags: Optional[list[str]] = None
+
     # It is recommended to not set this parameter, as it will default to the
     # session directory name.
     wandb_run_name: Optional[str] = None
-    tags: Optional[list[str]] = None
-    seed: Optional[int] = None
 
     # These parameters should never be defined in the config file.
     # They are used internally to restore a session.
